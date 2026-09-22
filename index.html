@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="tg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#e8e7e4" />
+
+    <title>Хисрав & Фариштабону — Тӯй / Свадьба</title>
+    <meta name="description" content="Шумо ба тӯй даъват шудаед. Вы приглашены на свадьбу Хисрава и Фариштабону." />
+
+    <!-- Open Graph / messenger previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Хисрав & Фариштабону — Тӯй / Свадьба" />
+    <meta property="og:description" content="Шумо даъват шудаед · Вы приглашены" />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="tg_TJ" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Хисрав & Фариштабону — Тӯй / Свадьба" />
+    <meta name="twitter:image" content="/og.png" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+
+    <!--
+      Critical, inline, zero-dependency boot screen.
+      It is painted from the very first byte of HTML — before any JS/CSS/font arrives —
+      so on a 2G connection the visitor sees the "system boot" instead of a white page.
+      The Vue app takes over the same element once mounted.
+    -->
+    <style>
+      :root { --bg: #e8e7e4; --ink: #2a2926; --ink-2: #6a6863; --line: #b4b2ab; --accent: #8f7344; }
+      html, body { margin: 0; background: var(--bg); color: var(--ink); }
+      body { font-family: ui-monospace, "IBM Plex Mono", SFMono-Regular, Menlo, Consolas, monospace; }
+      #boot {
+        position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
+        justify-content: center; align-items: center; background: var(--bg); color: var(--ink);
+        font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      }
+      #boot .line { display: flex; gap: .75em; opacity: .9; }
+      #boot .dim { color: var(--ink-2); }
+      #boot .cur { display: inline-block; width: .6em; height: 1.1em; background: var(--ink); vertical-align: -.15em; animation: blink 1s steps(1) infinite; }
+      #boot .bar { margin-top: 1.5rem; width: 12rem; height: 2px; background: var(--line); position: relative; overflow: hidden; }
+      #boot .bar::after { content: ""; position: absolute; inset: 0; width: 35%; background: var(--accent); animation: sweep 1.6s linear infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+      @media (prefers-reduced-motion: reduce) { #boot .cur, #boot .bar::after { animation: none; } }
+    </style>
+  </head>
+  <body>
+    <div id="boot" aria-live="polite" aria-label="Loading">
+      <div class="line"><span class="dim">SYSTEM://</span><span>WEDDING_NOTIFICATION</span></div>
+      <div class="line" style="margin-top:.5em"><span class="dim">&gt;</span><span>BOOT<span class="cur"></span></span></div>
+      <div class="bar"></div>
+    </div>
+
+    <div id="app"></div>
+
+    <noscript>
+      <!-- Pure-HTML fallback: the invitation still reads when JS is blocked or never arrives. -->
+      <style>#boot{display:none}</style>
+      <main style="max-width:36rem;margin:0 auto;padding:3rem 1.25rem;font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.6">
+        <p style="font-size:11px;letter-spacing:.14em;color:#6f665a">SYSTEM://WEDDING_NOTIFICATION</p>
+        <h1 style="font-weight:500;letter-spacing:.06em;font-size:1.6rem;margin:.5rem 0 1.5rem">Худоёров Хисрав &amp; Раҷабова Фариштабону</h1>
+        <p>Шумо даъват шудаед. · Вы приглашены.</p>
+        <p style="border:1px solid #b9ae98;padding:1rem;margin-top:1.5rem">
+          Падари домод / Отец жениха — Фирдавс: <a href="tel:+992555555977">+992 55 555 59 77</a><br />
+          Падари арӯс / Отец невесты — Алишер: <a href="tel:+992123123123">+992 12 312 31 23</a>
+        </p>
+      </main>
+    </noscript>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
