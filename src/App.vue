@@ -1,42 +1,72 @@
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import BootScreen from './components/BootScreen.vue'
 import HeroSection from './components/HeroSection.vue'
 import InfoSection from './components/InfoSection.vue'
 import LangSwitch from './components/LangSwitch.vue'
-import SoundToggle from './components/SoundToggle.vue'
-import { bindDocumentLang } from './i18n'
+import ScreenDots from './components/ScreenDots.vue'
+import { useI18n } from './i18n'
 import { useAssetsReady } from './composables/useAssetsReady'
-import { tryAutoplay } from './composables/useAudio'
+import { useReducedMotion } from './composables/useReducedMotion'
 
-bindDocumentLang()
+const { lang, setLang, t } = useI18n()
+const { ready, waitForAssets } = useAssetsReady()
+const { prefersReducedMotion } = useReducedMotion()
 
-// Desktop-only HUD cursor, loaded lazily and only when a fine pointer exists.
-const CustomCursor = defineAsyncComponent(() => import('./components/CustomCursor.vue'))
-const finePointer = typeof matchMedia === 'function' && matchMedia('(hover: hover) and (pointer: fine)').matches
+const containerRef = ref<HTMLElement | null>(null)
+const activeIndex = ref(0)
+let observer: IntersectionObserver | null = null
 
-const { ready, steps } = useAssetsReady()
-const booted = ref(false)
+onMounted(async () => {
+  document.documentElement.lang = t.value.meta.htmlLang
+  await waitForAssets()
+  await nextTick()
 
-watch(booted, (on) => { if (on) void tryAutoplay() })
+  const sections = containerRef.value?.querySelectorAll<HTMLElement>('section') ?? []
+  observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const idx = Array.from(sections).indexOf(entry.target as HTMLElement)
+          if (idx !== -1) activeIndex.value = idx
+        }
+      }
+    },
+    { threshold: 0.5 },
+  )
+  sections.forEach((s) => observer?.observe(s))
+})
+
+onUnmounted(() => observer?.disconnect())
+
+function goToSection(index: number) {
+  const sections = containerRef.value?.querySelectorAll<HTMLElement>('section')
+  const target = sections?.[index]
+  target?.scrollIntoView({ behavior: prefersReducedMotion.value ? 'auto' : 'smooth', block: 'start' })
+}
 </script>
 
 <template>
-  <div class="bg-wash min-h-dvh text-ink">
-    <BootScreen v-if="!booted" :ready="ready" :steps="steps" @done="booted = true" />
+  <Transition name="boot-fade">
+    <BootScreen v-if="!ready" />
+  </Transition>
 
-    <header class="fixed top-0 inset-x-0 z-40 flex items-start justify-end px-4 pt-4 sm:px-6 sm:pt-5 pointer-events-none">
-      <div class="flex items-center gap-3 pointer-events-auto">
-        <SoundToggle />
-        <LangSwitch />
-      </div>
-    </header>
+  <LangSwitch :lang="lang" :label="t.langSwitch.label" @set="setLang" />
+  <ScreenDots :active="activeIndex" :count="2" @select="goToSection" />
 
-    <main>
-      <HeroSection :started="booted" />
-      <InfoSection />
-    </main>
-
-    <CustomCursor v-if="finePointer" />
-  </div>
+  <main ref="containerRef" class="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll">
+    <HeroSection :start="ready" />
+    <InfoSection />
+  </main>
 </template>
+
+<style>
+.boot-fade-enter-active,
+.boot-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.boot-fade-enter-from,
+.boot-fade-leave-to {
+  opacity: 0;
+}
+</style>

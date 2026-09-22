@@ -1,33 +1,36 @@
 <script setup lang="ts">
-import { useI18n } from '../i18n'
-import { tick } from '../composables/useAudio'
+import ChevronDownIcon from './icons/ChevronDownIcon.vue'
 
-const props = defineProps<{ target: string }>()
-const { t } = useI18n()
-
-function go() {
-  tick(784)
-  document.querySelector(props.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
+defineProps<{ label: string }>()
 </script>
 
 <template>
-  <button type="button" class="group flex flex-col items-center gap-2 sys text-ink-2 hover:text-accent transition-colors" @click="go">
-    <span>{{ t.scroll }}</span>
-    <span class="relative block w-px h-8 bg-line overflow-hidden" aria-hidden="true">
-      <span class="scroll-dot absolute left-0 top-0 w-px h-3 bg-accent" />
-    </span>
-    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true">
-      <path d="M1 1l6 6 6-6" />
-    </svg>
-  </button>
+  <div class="scroll-hint flex flex-col items-center gap-2 text-ink/60">
+    <span class="text-[10px] font-medium uppercase tracking-[0.3em]">{{ label }}</span>
+    <ChevronDownIcon class="scroll-hint-icon h-4 w-4" />
+  </div>
 </template>
 
 <style scoped>
-.scroll-dot { animation: drop 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
-@keyframes drop {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(300%); }
+.scroll-hint-icon {
+  animation: scroll-hint-drift 2.4s ease-in-out infinite;
 }
-@media (prefers-reduced-motion: reduce) { .scroll-dot { animation: none; } }
+
+@keyframes scroll-hint-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(5px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-icon {
+    animation: none;
+  }
+}
 </style>

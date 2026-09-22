@@ -1,22 +1,30 @@
+<script setup lang="ts">
+// A thin, minimal ornamental divider placed between the names — a small
+// branch/leaf motif rendered as inline SVG (no image request, tiny weight).
+</script>
+
 <template>
   <svg
-    class="botanical mx-auto block text-accent"
-    viewBox="0 0 200 24"
+    class="botanical-divider"
+    viewBox="0 0 180 24"
     fill="none"
-    stroke="currentColor"
-    stroke-width="1"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <path d="M8 12h72" opacity="0.55" />
-    <path d="M120 12h72" opacity="0.55" />
-    <path d="M100 4c-3 3-5 5-8 8 3 3 5 5 8 8 3-3 5-5 8-8-3-3-5-5-8-8Z" fill="currentColor" stroke="none" opacity="0.85" />
-    <path d="M88 12c4-6 8-8 12-8s8 2 12 8" opacity="0.7" />
-    <path d="M88 12c4 6 8 8 12 8s8-2 12-8" opacity="0.7" />
+    <path d="M2 12H74" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+    <path d="M106 12H178" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+    <g stroke="currentColor" stroke-width="1" stroke-linecap="round">
+      <path d="M90 12c0-5.5 3.4-9 8-10-1.6 4.3-1.6 7.2 0 10-1.6 2.8-1.6 5.7 0 10-4.6-1-8-4.5-8-10Z" />
+      <path d="M90 12c0-5.5-3.4-9-8-10 1.6 4.3 1.6 7.2 0 10 1.6 2.8 1.6 5.7 0 10 4.6-1 8-4.5 8-10Z" />
+      <circle cx="90" cy="12" r="1.6" fill="currentColor" stroke="none" />
+    </g>
   </svg>
 </template>
 
 <style scoped>
-.botanical { width: min(12rem, 55vw); height: auto; }
+.botanical-divider {
+  width: 7.5rem;
+  height: 1rem;
+  color: var(--color-gold);
+}
 </style>

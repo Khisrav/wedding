@@ -1,10 +1,24 @@
-import { onBeforeUnmount, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
+/** Tracks the user's `prefers-reduced-motion` OS setting reactively. */
 export function useReducedMotion() {
-  const mq = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
-  const reduced = ref(mq?.matches ?? false)
-  const onChange = (e: MediaQueryListEvent) => (reduced.value = e.matches)
-  mq?.addEventListener?.('change', onChange)
-  onBeforeUnmount(() => mq?.removeEventListener?.('change', onChange))
-  return reduced
+  const prefersReducedMotion = ref(false)
+  let mql: MediaQueryList | null = null
+
+  const handler = (e: MediaQueryListEvent) => {
+    prefersReducedMotion.value = e.matches
+  }
+
+  onMounted(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    mql = window.matchMedia('(prefers-reduced-motion: reduce)')
+    prefersReducedMotion.value = mql.matches
+    mql.addEventListener('change', handler)
+  })
+
+  onUnmounted(() => {
+    mql?.removeEventListener('change', handler)
+  })
+
+  return { prefersReducedMotion }
 }

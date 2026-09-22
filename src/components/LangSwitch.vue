@@ -1,41 +1,33 @@
 <script setup lang="ts">
-import { useI18n, type Lang } from '../i18n'
-import { tick } from '../composables/useAudio'
+import type { Lang } from '../i18n'
 
-const { lang, setLang, t } = useI18n()
-const options: { id: Lang; label: string }[] = [
-  { id: 'tj', label: 'TJ' },
-  { id: 'ru', label: 'RU' },
-]
-function pick(l: Lang) {
-  if (l === lang.value) return
-  tick(1046)
-  setLang(l)
-}
+defineProps<{ lang: Lang; label: string }>()
+const emit = defineEmits<{ (e: 'set', lang: Lang): void }>()
 </script>
 
 <template>
   <div
-    class="flex rounded-sm border border-line bg-paper-2/75 backdrop-blur-[2px] overflow-hidden"
+    class="fixed right-4 top-4 z-40 flex items-center gap-0.5 rounded-full border border-ink/10 bg-cream/80 p-1 text-[11px] font-medium uppercase tracking-widest backdrop-blur-sm md:right-6 md:top-6"
     role="group"
-    :aria-label="t.langSwitch"
+    :aria-label="label"
   >
     <button
-      v-for="o in options"
-      :key="o.id"
       type="button"
-      class="relative px-3 py-2 font-body text-[11px] font-medium tracking-sys uppercase transition-colors"
-      :class="o.id === lang ? 'text-ink' : 'text-ink-3 hover:text-ink-2'"
-      :aria-pressed="o.id === lang"
-      :lang="o.id === 'tj' ? 'tg' : 'ru'"
-      @click="pick(o.id)"
+      class="rounded-full px-2.5 py-1.5 transition-colors"
+      :class="lang === 'ru' ? 'bg-gold text-cream' : 'text-ink/50'"
+      :aria-pressed="lang === 'ru'"
+      @click="emit('set', 'ru')"
     >
-      {{ o.label }}
-      <span
-        v-if="o.id === lang"
-        class="absolute left-2 right-2 -bottom-px h-px bg-accent transition-[left,right] duration-300"
-        aria-hidden="true"
-      />
+      RU
+    </button>
+    <button
+      type="button"
+      class="rounded-full px-2.5 py-1.5 transition-colors"
+      :class="lang === 'tj' ? 'bg-gold text-cream' : 'text-ink/50'"
+      :aria-pressed="lang === 'tj'"
+      @click="emit('set', 'tj')"
+    >
+      TJ
     </button>
   </div>
 </template>

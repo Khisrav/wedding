@@ -1,6 +1,10 @@
+<script setup lang="ts"></script>
+
 <template>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-    <path d="M3.5 5.5h17v15h-17zM3.5 10h17M8 3v4M16 3v4" />
-    <path d="M7 13.5h2v2H7zM11 13.5h2v2h-2zM15 13.5h2v2h-2z" />
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="4" y="5.5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.4" />
+    <path d="M4 9.5h16" stroke="currentColor" stroke-width="1.4" />
+    <path d="M8 3.5v3.2M16 3.5v3.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+    <path d="M8 13h2M8 16.3h2M14 13h2M14 16.3h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
   </svg>
 </template>

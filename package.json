@@ -1,5 +1,5 @@
 {
-  "name": "wedding-invitation",
+  "name": "wedding-invite",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,24 +7,21 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "assets": "node scripts/generate-assets.mjs"
+    "generate-assets": "node scripts/generate-assets.mjs"
   },
   "dependencies": {
-    "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/eb-garamond": "^5.3.0",
-    "gsap": "^3.12.7",
-    "vue": "^3.5.13"
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/playfair-display": "^5.3.0",
+    "gsap": "^3.15.0",
+    "vue": "^3.5.43"
   },
   "devDependencies": {
-    "@resvg/resvg-js": "^2.6.2",
-    "@tailwindcss/vite": "^4.1.4",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "@vue/tsconfig": "^0.7.0",
-    "tailwindcss": "^4.1.4",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.1",
-    "vite-plugin-pwa": "^1.0.0",
-    "vue-tsc": "^2.2.8",
-    "wawoff2": "^2.0.1"
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vue-tsc": "^3.3.11"
   }
 }

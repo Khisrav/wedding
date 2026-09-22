@@ -1,147 +1,111 @@
 <script setup lang="ts">
-import { onBeforeUnmount, reactive, ref, watch } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import PetalCanvas from './PetalCanvas.vue'
-import ScrollHint from './ScrollHint.vue'
 import BotanicalDivider from './BotanicalDivider.vue'
-import { EVENT } from '../config/event'
+import ScrollHint from './ScrollHint.vue'
 import { useI18n } from '../i18n'
-import { loadGsap } from '../lib/gsap'
+import { brideName, groomName } from '../config/event'
+import { gsap } from '../lib/gsap'
 import { useReducedMotion } from '../composables/useReducedMotion'
 
-const props = defineProps<{ started: boolean }>()
-const { t, pick, lang } = useI18n()
-const reduced = useReducedMotion()
+const props = defineProps<{ start: boolean }>()
 
-const root = ref<HTMLElement | null>(null)
-const noticeEl = ref<HTMLElement | null>(null)
+const { t } = useI18n()
+const { prefersReducedMotion } = useReducedMotion()
 
-const typed = reactive({ groom: 0, bride: 0 })
-const introDone = ref(false)
-const groomName = () => pick(EVENT.groom)
-const brideName = () => pick(EVENT.bride)
+const groomLetters = computed(() => [...groomName])
+const brideLetters = computed(() => [...brideName])
 
-let tl: { kill: () => void } | null = null
+const heroRoot = ref<HTMLElement | null>(null)
+const eyebrowRef = ref<HTMLElement | null>(null)
+const dividerRef = ref<HTMLElement | null>(null)
+const inviteRef = ref<HTMLElement | null>(null)
+const hintRef = ref<HTMLElement | null>(null)
 
-function revealAll() {
-  typed.groom = groomName().length
-  typed.bride = brideName().length
-  root.value?.querySelectorAll<HTMLElement>('.pre').forEach((el) => el.classList.remove('pre'))
-  introDone.value = true
-}
+let tl: gsap.core.Timeline | null = null
 
-async function playIntro() {
-  const g = await loadGsap()
-  const els = root.value?.querySelectorAll<HTMLElement>('[data-intro]')
-  if (!g || !els || reduced.value) return revealAll()
+function playIntro() {
+  if (!heroRoot.value) return
 
-  const { gsap } = g
-  const byKey = (k: string) => Array.from(els).filter((e) => e.dataset.intro === k)
+  if (prefersReducedMotion.value) return
 
-  gsap.set(els, { autoAlpha: 0, y: 12 })
-  els.forEach((el) => el.classList.remove('pre'))
-
-  const timeline = gsap.timeline({
-    defaults: { ease: 'power2.out' },
-    onComplete: () => (introDone.value = true),
+  const letters = heroRoot.value.querySelectorAll<HTMLElement>('.name-letter')
+  gsap.set(letters, { opacity: 0, y: 16 })
+  gsap.set([eyebrowRef.value, dividerRef.value, inviteRef.value, hintRef.value], {
+    opacity: 0,
+    y: 12,
   })
-  tl = timeline
 
-  timeline
-    .to(byKey('ornament'), { autoAlpha: 1, y: 0, duration: 0.7 })
-    .to(byKey('label-groom'), { autoAlpha: 1, y: 0, duration: 0.45 }, '-=0.25')
-    .to(byKey('groom'), { autoAlpha: 1, y: 0, duration: 0.01 })
-    .to(typed, { groom: groomName().length, duration: groomName().length * 0.05, ease: 'none', snap: 'groom' })
-    .to(byKey('amp'), { autoAlpha: 1, y: 0, duration: 0.55 }, '-=0.1')
-    .to(byKey('label-bride'), { autoAlpha: 1, y: 0, duration: 0.45 }, '-=0.3')
-    .to(byKey('bride'), { autoAlpha: 1, y: 0, duration: 0.01 })
-    .to(typed, { bride: brideName().length, duration: brideName().length * 0.05, ease: 'none', snap: 'bride' })
-    .add(() => noticeEl.value?.classList.add('fade-in'), '+=0.12')
-    .to(byKey('notice'), { autoAlpha: 1, y: 0, duration: 0.01 })
-    .to(byKey('body'), { autoAlpha: 1, y: 0, duration: 0.7 }, '+=0.35')
-    .to(byKey('hint'), { autoAlpha: 1, y: 0, duration: 0.65 }, '-=0.2')
+  tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
+  tl.to(eyebrowRef.value, { opacity: 1, y: 0, duration: 0.7 })
+    .to(letters, { opacity: 1, y: 0, duration: 0.55, stagger: 0.032 }, '-=0.35')
+    .to(dividerRef.value, { opacity: 1, y: 0, duration: 0.6 }, '-=0.15')
+    .to(inviteRef.value, { opacity: 1, y: 0, duration: 0.7 }, '-=0.25')
+    .to(hintRef.value, { opacity: 1, y: 0, duration: 0.6 }, '-=0.2')
 }
 
 watch(
-  () => props.started,
-  (on) => { if (on) playIntro() },
+  () => props.start,
+  (started) => {
+    if (started) playIntro()
+  },
   { immediate: true },
 )
 
-watch(lang, () => {
-  if (!introDone.value) return
-  typed.groom = groomName().length
-  typed.bride = brideName().length
-  const el = noticeEl.value
-  if (!el || reduced.value) return
-  el.classList.remove('fade-in')
-  void el.offsetWidth
-  el.classList.add('fade-in')
-})
-
-onBeforeUnmount(() => tl?.kill())
+onUnmounted(() => tl?.kill())
 </script>
 
 <template>
   <section
-    ref="root"
-    id="hero"
-    class="relative min-h-dvh flex flex-col overflow-hidden"
-    aria-labelledby="hero-title"
+    ref="heroRoot"
+    class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24 md:h-screen md:snap-start"
   >
-    <PetalCanvas :active="started" />
+    <PetalCanvas />
 
-    <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-5 pt-20 pb-28 sm:pb-32">
-      <div class="pre" data-intro="ornament">
-        <BotanicalDivider />
-      </div>
+    <div class="relative z-10 flex max-w-sm flex-col items-center text-center">
+      <p
+        ref="eyebrowRef"
+        class="mb-6 text-[11px] font-medium uppercase tracking-[0.35em] text-burgundy/70"
+      >
+        {{ t.hero.eyebrow }}
+      </p>
 
-      <h1 id="hero-title" class="mt-8 sm:mt-10 leading-[1.12]">
-        <span class="pre block sys mb-2" data-intro="label-groom">{{ t.groom }}</span>
-        <span class="pre block font-display text-[clamp(2rem,8vw,4.75rem)] text-ink text-balance" data-intro="groom">
-          <span aria-hidden="true">{{ groomName().slice(0, typed.groom) }}</span><span
-            v-if="typed.groom < groomName().length"
-            class="cursor-blink inline-block w-[.4em] h-[.85em] bg-accent align-[-0.05em] ml-1"
-            aria-hidden="true"
-          /><span class="sr-only">{{ groomName() }}</span>
+      <h1 class="font-serif text-ink">
+        <span class="sr-only">{{ groomName }} &amp; {{ brideName }}</span>
+        <span aria-hidden="true" class="name-line block leading-tight">
+          <span v-for="(ch, i) in groomLetters" :key="`g-${i}`" class="name-letter inline-block">{{
+            ch
+          }}</span>
         </span>
 
-        <span class="pre block my-5 sm:my-7 text-accent font-display text-2xl sm:text-3xl font-normal" data-intro="amp" aria-hidden="true">
-          <span class="inline-block w-8 sm:w-14 h-px bg-line align-middle mr-3 sm:mr-4" />{{ t.and }}<span class="inline-block w-8 sm:w-14 h-px bg-line align-middle ml-3 sm:ml-4" />
+        <span ref="dividerRef" class="my-3 flex justify-center md:my-4">
+          <BotanicalDivider />
         </span>
 
-        <span class="pre block sys mb-2" data-intro="label-bride">{{ t.bride }}</span>
-        <span class="pre block font-display text-[clamp(2rem,8vw,4.75rem)] text-ink text-balance" data-intro="bride">
-          <span aria-hidden="true">{{ brideName().slice(0, typed.bride) }}</span><span
-            v-if="typed.bride < brideName().length"
-            class="cursor-blink inline-block w-[.4em] h-[.85em] bg-accent align-[-0.05em] ml-1"
-            aria-hidden="true"
-          /><span class="sr-only">{{ brideName() }}</span>
+        <span aria-hidden="true" class="name-line block leading-tight">
+          <span v-for="(ch, i) in brideLetters" :key="`b-${i}`" class="name-letter inline-block">{{
+            ch
+          }}</span>
         </span>
       </h1>
 
-      <div class="mt-10 sm:mt-14 max-w-lg">
-        <p
-          ref="noticeEl"
-          class="pre font-display text-[clamp(1.05rem,3.2vw,1.35rem)] text-ink tracking-[0.06em] border-y border-accent/50 py-3.5 px-2 inline-block"
-          data-intro="notice"
-        >
-          {{ t.notice }}
-        </p>
-        <p class="pre mt-6 font-body text-ink-2 text-[1.05rem] sm:text-lg leading-relaxed" data-intro="body">
-          {{ t.inviteBody }}
-        </p>
-      </div>
+      <p ref="inviteRef" class="mt-8 max-w-[22rem] text-[15px] leading-relaxed text-ink/75 md:text-base">
+        {{ t.hero.invite }}
+      </p>
     </div>
 
-    <div class="pre absolute bottom-5 inset-x-0 flex justify-center" data-intro="hint">
-      <ScrollHint target="#info" />
+    <div ref="hintRef" class="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 md:bottom-12">
+      <ScrollHint :label="t.hero.scrollHint" />
     </div>
   </section>
 </template>
 
 <style scoped>
-.pre {
-  opacity: 0;
-  visibility: hidden;
+/* Names never wrap mid-word — font-size scales with the viewport (with a
+   floor/ceiling) so both the short and the long name always fit on one
+   line inside the narrow, centered column at any screen size. */
+.name-line {
+  white-space: nowrap;
+  font-size: clamp(1.85rem, 9vw, 2.75rem);
 }
 </style>
