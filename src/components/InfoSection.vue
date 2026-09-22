@@ -100,13 +100,6 @@ function addToCalendar() {
           />
         </div>
       </div>
-
-      <ShareButton
-        :title="`${groomName} & ${brideName}`"
-        :text="t.hero.invite"
-        :label="t.info.shareCta"
-        :copied-label="t.info.shareCopied"
-      />
     </div>
   </section>
 </template>

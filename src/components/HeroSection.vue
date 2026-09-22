@@ -2,6 +2,7 @@
 import { computed, onUnmounted, ref, watch } from 'vue'
 import PetalCanvas from './PetalCanvas.vue'
 import BotanicalDivider from './BotanicalDivider.vue'
+import GrowingFlower from './GrowingFlower.vue'
 import ScrollHint from './ScrollHint.vue'
 import { useI18n } from '../i18n'
 import { brideName, groomName } from '../config/event'
@@ -72,7 +73,14 @@ onUnmounted(() => tl?.kill())
 
       <h1 class="font-serif text-ink">
         <span class="sr-only">{{ groomName }} &amp; {{ brideName }}</span>
-        <span aria-hidden="true" class="name-line block leading-tight">
+        <span aria-hidden="true" class="name-line relative inline-block leading-tight">
+          <!-- <GrowingFlower
+            class="pointer-events-none absolute bottom-1 -left-14 md:bottom-2 md:-left-20"
+            :size="62"
+            tone="gold"
+            :delay="1.0"
+            :trigger="start"
+          /> -->
           <span v-for="(ch, i) in groomLetters" :key="`g-${i}`" class="name-letter inline-block">{{
             ch
           }}</span>
@@ -82,7 +90,14 @@ onUnmounted(() => tl?.kill())
           <BotanicalDivider />
         </span>
 
-        <span aria-hidden="true" class="name-line block leading-tight">
+        <span aria-hidden="true" class="name-line relative inline-block leading-tight">
+          <GrowingFlower
+            class="pointer-events-none absolute bottom-1 -left-14 md:bottom-2 md:-left-20"
+            :size="62"
+            tone="gold"
+            :delay="1.0"
+            :trigger="start"
+          />
           <span v-for="(ch, i) in brideLetters" :key="`b-${i}`" class="name-letter inline-block">{{
             ch
           }}</span>

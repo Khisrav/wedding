@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import BootScreen from './components/BootScreen.vue'
+import HeartField from './components/HeartField.vue'
 import HeroSection from './components/HeroSection.vue'
 import InfoSection from './components/InfoSection.vue'
 import LangSwitch from './components/LangSwitch.vue'
@@ -51,10 +52,14 @@ function goToSection(index: number) {
     <BootScreen v-if="!ready" />
   </Transition>
 
+  <HeartField />
   <LangSwitch :lang="lang" :label="t.langSwitch.label" @set="setLang" />
   <ScreenDots :active="activeIndex" :count="2" @select="goToSection" />
 
-  <main ref="containerRef" class="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll">
+  <main
+    ref="containerRef"
+    class="relative z-10 w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll"
+  >
     <HeroSection :start="ready" />
     <InfoSection />
   </main>
