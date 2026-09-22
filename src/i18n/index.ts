@@ -9,31 +9,31 @@ const dict = {
   tj: {
     htmlLang: 'tg',
     title: 'Хисрав & Фариштабону — Тӯй',
-    sysHeader: 'SYSTEM://WEDDING_NOTIFICATION',
-    bootLine1: 'СИСТЕМА БОР МЕШАВАД',
-    bootLine2: 'ҲУРУФ, СКРИПТҲО, РАСМҲО',
-    bootReady: 'ТАЙЁР',
-    groom: 'ДОМОД',
-    bride: 'АРӮС',
+    sysHeader: 'ДАЪВАТНОМА',
+    bootLine1: 'Даъватнома кушода мешавад…',
+    bootLine2: 'Ҳуруфҳо, ҳаракатҳо, тасвирҳо',
+    bootReady: 'Хуш омадед',
+    groom: 'Домод',
+    bride: 'Арӯс',
     and: '&',
-    notice: 'ҲОДИСА: АҚДИ НИКОҲ',
-    invited: 'ШУМО ДАЪВАТ ШУДАЕД',
+    notice: 'Шумо ба тӯй даъват шудаед',
+    invited: 'Шумо даъват шудаед',
     inviteBody: 'Шуморо самимона даъват менамоем, ки ин рӯзи хушро бо мо ҷашн гиред.',
-    scroll: 'ПОЁНТАР',
-    infoTitle: 'МАЪЛУМОТ',
-    infoSub: 'STATUS // EVENT_DATA',
-    date: 'САНА',
-    time: 'ВАҚТ',
-    venue: 'ҶОЙИ БАРГУЗОРӢ',
-    coords: 'КООРДИНАТҲО',
-    openMap: 'ХАРИТА',
-    contacts: 'ТАМОС',
+    scroll: 'Поёнтар',
+    infoTitle: 'Маълумот',
+    infoSub: 'Рӯз · Ҷой · Тамос',
+    date: 'Сана',
+    time: 'Вақт',
+    venue: 'Ҷои баргузорӣ',
+    coords: 'Координатҳо',
+    openMap: 'Харита',
+    contacts: 'Тамос',
     groomFather: 'Падари домод',
     brideFather: 'Падари арӯс',
-    call: 'ЗАНГ ЗАНЕД',
-    addToCalendar: 'БА ТАҚВИМ ИЛОВА КУНЕД',
+    call: 'Занг занед',
+    addToCalendar: 'Ба тақвим илова кунед',
     footer: 'Шуморо интизорем',
-    sound: 'САДО',
+    sound: 'Садо',
     soundOn: 'Садоро фаъол кунед',
     soundOff: 'Садоро хомӯш кунед',
     langSwitch: 'Забон',
@@ -45,31 +45,31 @@ const dict = {
   ru: {
     htmlLang: 'ru',
     title: 'Хисрав & Фариштабону — Свадьба',
-    sysHeader: 'SYSTEM://WEDDING_NOTIFICATION',
-    bootLine1: 'ЗАГРУЗКА СИСТЕМЫ',
-    bootLine2: 'ШРИФТЫ, СКРИПТЫ, РЕСУРСЫ',
-    bootReady: 'ГОТОВО',
-    groom: 'ЖЕНИХ',
-    bride: 'НЕВЕСТА',
+    sysHeader: 'ПРИГЛАШЕНИЕ',
+    bootLine1: 'Приглашение открывается…',
+    bootLine2: 'Шрифты, анимация, ресурсы',
+    bootReady: 'Добро пожаловать',
+    groom: 'Жених',
+    bride: 'Невеста',
     and: '&',
-    notice: 'СОСТОЯЛОСЬ СОБЫТИЕ: БРАКОСОЧЕТАНИЕ',
-    invited: 'ВЫ ПРИГЛАШЕНЫ',
+    notice: 'Вы приглашены на свадьбу',
+    invited: 'Вы приглашены',
     inviteBody: 'Приглашаем вас разделить с нами этот день.',
-    scroll: 'ПРОКРУТИТЕ',
-    infoTitle: 'ИНФОРМАЦИЯ',
-    infoSub: 'STATUS // EVENT_DATA',
-    date: 'ДАТА',
-    time: 'ВРЕМЯ',
-    venue: 'МЕСТО ПРОВЕДЕНИЯ',
-    coords: 'КООРДИНАТЫ',
-    openMap: 'КАРТА',
-    contacts: 'КОНТАКТЫ',
+    scroll: 'Далее',
+    infoTitle: 'Сведения',
+    infoSub: 'День · Место · Контакты',
+    date: 'Дата',
+    time: 'Время',
+    venue: 'Место проведения',
+    coords: 'Координаты',
+    openMap: 'Карта',
+    contacts: 'Контакты',
     groomFather: 'Отец жениха',
     brideFather: 'Отец невесты',
-    call: 'ПОЗВОНИТЬ',
-    addToCalendar: 'ДОБАВИТЬ В КАЛЕНДАРЬ',
+    call: 'Позвонить',
+    addToCalendar: 'Добавить в календарь',
     footer: 'Ждём вас',
-    sound: 'ЗВУК',
+    sound: 'Звук',
     soundOn: 'Включить звук',
     soundOff: 'Выключить звук',
     langSwitch: 'Язык',
@@ -101,24 +101,21 @@ function syncLangToUrl(l: Lang) {
 }
 
 function initialLang(): Lang {
-  // URL wins so shared invitation links open in the intended language.
   const fromUrl = langFromUrl()
   if (fromUrl) return fromUrl
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved === 'ru' || saved === 'tj') return saved
   } catch { /* private mode etc. */ }
-  return 'tj' // default is Tajik, per spec
+  return 'tj'
 }
 
 const lang = ref<Lang>(initialLang())
 
-// Keep the address bar in sync when the page was opened without ?l=
 if (typeof location !== 'undefined' && !langFromUrl()) {
   syncLangToUrl(lang.value)
 }
 
-/** Module-level singleton: one reactive language for the whole app. */
 export function useI18n() {
   const t = computed<Dict>(() => dict[lang.value] as Dict)
 
@@ -129,13 +126,11 @@ export function useI18n() {
   }
   const toggle = () => setLang(lang.value === 'tj' ? 'ru' : 'tj')
 
-  /** Pick a value from a { ru, tj } object */
   const pick = <A, B>(v: { ru: A; tj: B }): A | B => v[lang.value]
 
   return { lang, t, setLang, toggle, pick }
 }
 
-/** Keep <html lang> and <title> in sync. Call once from App. */
 export function bindDocumentLang() {
   watchEffect(() => {
     const d = dict[lang.value]
@@ -144,7 +139,6 @@ export function bindDocumentLang() {
   })
 }
 
-/** Locale-aware date parts without relying on Intl 'tg' support (patchy in browsers). */
 export function formatDate(iso: string, d: Dict) {
   const date = new Date(iso)
   const day = date.getDate()
@@ -153,12 +147,12 @@ export function formatDate(iso: string, d: Dict) {
   const weekday = d.weekdays[date.getDay()]
   const hh = String(date.getHours()).padStart(2, '0')
   const mm = String(date.getMinutes()).padStart(2, '0')
-  const pad = (n: number) => String(n).padStart(2, '0')
+  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']
   return {
     human: `${day} ${month} ${year}`,
     weekday,
     time: `${hh}:${mm}`,
-    /** 2026.11.15 — the "system" rendering */
-    sys: `${year}.${pad(date.getMonth() + 1)}.${pad(day)}`,
+    /** 15 · XI · 2026 — Belle Époque ceremonial date */
+    sys: `${day} · ${roman[date.getMonth()]} · ${year}`,
   }
 }

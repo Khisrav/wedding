@@ -15,9 +15,9 @@ export function useAssetsReady(opts: { minMs?: number; maxMs?: number } = {}) {
   const { minMs = 1800, maxMs = 9000 } = opts
   const ready = ref(false)
   const steps = ref<BootStep[]>([
-    { id: 'fonts', label: 'FONTS', done: false },
-    { id: 'motion', label: 'MOTION_ENGINE', done: false },
-    { id: 'dom', label: 'INTERFACE', done: false },
+    { id: 'fonts', label: 'Шрифтҳо / Шрифты', done: false },
+    { id: 'motion', label: 'Ҳаракат / Движение', done: false },
+    { id: 'dom', label: 'Саҳифа / Страница', done: false },
   ])
   const mark = (id: string) => {
     const s = steps.value.find((x) => x.id === id)
@@ -26,16 +26,13 @@ export function useAssetsReady(opts: { minMs?: number; maxMs?: number } = {}) {
 
   const fonts = (async () => {
     if (!('fonts' in document)) return
-    // Explicitly request the faces the first screen needs; document.fonts.ready
-    // only covers faces already used by rendered text.
     const faces = [
-      '400 1em "IBM Plex Mono"',
-      '500 1em "IBM Plex Mono"',
-      '300 1em Manrope',
-      '500 1em Manrope',
-      '400 1em "Bad Script"',
+      '500 1em "Cormorant Garamond"',
+      '600 1em "Cormorant Garamond"',
+      '400 1em "EB Garamond"',
+      '500 1em "EB Garamond"',
     ]
-    await Promise.allSettled(faces.map((f) => document.fonts.load(f, 'Тӯй Свадьба ABC Хисрав')))
+    await Promise.allSettled(faces.map((f) => document.fonts.load(f, 'Тӯй Свадьба ABC Хисрав Фариштабону')))
     await document.fonts.ready
   })().finally(() => mark('fonts'))
 

@@ -28,8 +28,8 @@ type Petal = {
   settleTarget: number // y where it should rest, or -1 (never settles)
 }
 
-// Ochre / dusty crimson / bone — no pastel pink
-const COLORS = ['#a8823e', '#b5533f', '#8f6b3a', '#c9a45c', '#9c3f36', '#efe8d6']
+// Antique gold / dusty rose / sage — Clair Obscur light motif
+const COLORS = ['#b8863b', '#d4af6a', '#d98b8b', '#c97878', '#8a9a7e', '#efe2c9']
 
 let ctx: CanvasRenderingContext2D | null = null
 let W = 0, H = 0, dpr = 1
@@ -81,7 +81,7 @@ function drawPetal(p: Petal, alphaMul: number) {
   c.fill()
   // hairline midrib, very subtle
   c.globalAlpha = p.alpha * alphaMul * 0.35
-  c.strokeStyle = '#2b2620'
+  c.strokeStyle = '#2e2620'
   c.lineWidth = 0.5
   c.beginPath()
   c.moveTo(0, -s * 0.7)

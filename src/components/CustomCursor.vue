@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** HUD reticle cursor. Desktop only (mounted behind a pointer:fine check). */
+/** Soft ornamental cursor — desktop only (mounted behind a pointer:fine check). */
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const el = ref<HTMLElement | null>(null)
@@ -23,8 +23,8 @@ function onMove(e: PointerEvent) {
 function onLeave() { visible = false; el.value?.classList.remove('is-visible') }
 
 function loop() {
-  pos.x += (target.x - pos.x) * 0.35
-  pos.y += (target.y - pos.y) * 0.35
+  pos.x += (target.x - pos.x) * 0.32
+  pos.y += (target.y - pos.y) * 0.32
   if (el.value) el.value.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`
   raf = requestAnimationFrame(loop)
 }
@@ -45,23 +45,23 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="el" class="cur fixed left-0 top-0 z-[90] pointer-events-none" aria-hidden="true">
-    <svg class="cur-svg" width="36" height="36" viewBox="-18 -18 36 36" fill="none" stroke="#2b2620" stroke-width="1">
-      <!-- crosshair with a gap in the middle -->
-      <path d="M0 -14V-5M0 5V14M-14 0H-5M5 0H14" />
-      <!-- corner brackets, expand on hover -->
-      <g class="brackets">
-        <path d="M-11 -7V-11H-7M7 -11H11V-7M11 7V11H7M-7 11H-11V7" />
-      </g>
-      <circle r="1.2" fill="#a8823e" stroke="none" />
+    <svg class="cur-svg" width="34" height="34" viewBox="-17 -17 34 34" fill="none" stroke="#2e2620" stroke-width="1" stroke-linecap="round">
+      <!-- delicate fleur / petal cross -->
+      <path d="M0 -13C2 -8 2 -4 0 -1C-2 -4 -2 -8 0 -13Z" fill="#d98b8b" fill-opacity="0.35" />
+      <path d="M0 13C2 8 2 4 0 1C-2 4 -2 8 0 13Z" fill="#d98b8b" fill-opacity="0.35" />
+      <path d="M-13 0C-8 2 -4 2 -1 0C-4 -2 -8 -2 -13 0Z" fill="#d4af6a" fill-opacity="0.4" />
+      <path d="M13 0C8 2 4 2 1 0C4 -2 8 -2 13 0Z" fill="#d4af6a" fill-opacity="0.4" />
+      <circle r="1.4" fill="#b8863b" stroke="none" />
+      <circle class="ring" r="7" stroke="#b8863b" stroke-opacity="0.45" />
     </svg>
   </div>
 </template>
 
 <style scoped>
-.cur { opacity: 0; transition: opacity 200ms linear; will-change: transform; }
+.cur { opacity: 0; transition: opacity 220ms linear; will-change: transform; }
 .cur.is-visible { opacity: 1; }
-.cur-svg { display: block; margin: -18px 0 0 -18px; transition: transform 120ms linear; }
-.brackets { transition: transform 120ms linear; transform-origin: 0 0; }
-.cur.is-hot .brackets { transform: scale(1.35); stroke: #a8823e; }
-.cur.is-hot .cur-svg { transform: rotate(45deg); }
+.cur-svg { display: block; margin: -17px 0 0 -17px; transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+.ring { transition: r 200ms cubic-bezier(0.22, 0.61, 0.36, 1), stroke-opacity 200ms linear; }
+.cur.is-hot .cur-svg { transform: scale(1.18); }
+.cur.is-hot .ring { stroke-opacity: 0.85; }
 </style>

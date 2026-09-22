@@ -15,20 +15,27 @@ function pick(l: Lang) {
 </script>
 
 <template>
-  <div class="flex border border-line bg-paper/70 backdrop-blur-[2px]" role="group" :aria-label="t.langSwitch">
+  <div
+    class="flex rounded-sm border border-line bg-paper-2/75 backdrop-blur-[2px] overflow-hidden"
+    role="group"
+    :aria-label="t.langSwitch"
+  >
     <button
       v-for="o in options"
       :key="o.id"
       type="button"
-      class="relative px-3 py-2 font-mono text-[11px] tracking-sys transition-colors"
+      class="relative px-3 py-2 font-body text-[11px] font-medium tracking-sys uppercase transition-colors"
       :class="o.id === lang ? 'text-ink' : 'text-ink-3 hover:text-ink-2'"
       :aria-pressed="o.id === lang"
       :lang="o.id === 'tj' ? 'tg' : 'ru'"
       @click="pick(o.id)"
     >
       {{ o.label }}
-      <!-- 2px active indicator bar: snaps, never glides -->
-      <span v-if="o.id === lang" class="absolute left-2 right-2 -bottom-px h-[2px] bg-accent" aria-hidden="true" />
+      <span
+        v-if="o.id === lang"
+        class="absolute left-2 right-2 -bottom-px h-px bg-accent transition-[left,right] duration-300"
+        aria-hidden="true"
+      />
     </button>
   </div>
 </template>

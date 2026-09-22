@@ -4,12 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#e8e7e4" />
+    <meta name="theme-color" content="#f7f1e6" />
 
     <title>Хисрав & Фариштабону — Тӯй / Свадьба</title>
     <meta name="description" content="Шумо ба тӯй даъват шудаед. Вы приглашены на свадьбу Хисрава и Фариштабону." />
 
-    <!-- Open Graph / messenger previews -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Хисрав & Фариштабону — Тӯй / Свадьба" />
     <meta property="og:description" content="Шумо даъват шудаед · Вы приглашены" />
@@ -26,49 +25,68 @@
     <link rel="apple-touch-icon" href="/icon-192.png" />
 
     <!--
-      Critical, inline, zero-dependency boot screen.
-      It is painted from the very first byte of HTML — before any JS/CSS/font arrives —
-      so on a 2G connection the visitor sees the "system boot" instead of a white page.
-      The Vue app takes over the same element once mounted.
+      Critical, inline, zero-dependency opening screen.
+      Painted from the first byte of HTML — before any JS/CSS/font arrives —
+      so on a slow connection the visitor sees a ceremonial invitation open,
+      not a white page. The Vue app takes over the same element once mounted.
     -->
     <style>
-      :root { --bg: #e8e7e4; --ink: #2a2926; --ink-2: #6a6863; --line: #b4b2ab; --accent: #8f7344; }
+      :root { --bg: #f7f1e6; --ink: #2e2620; --ink-2: #7a6a55; --line: #d8c6a1; --accent: #b8863b; }
       html, body { margin: 0; background: var(--bg); color: var(--ink); }
-      body { font-family: ui-monospace, "IBM Plex Mono", SFMono-Regular, Menlo, Consolas, monospace; }
+      body { font-family: Georgia, "Times New Roman", Times, serif; }
       #boot {
         position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
         justify-content: center; align-items: center; background: var(--bg); color: var(--ink);
-        font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+        background-image:
+          radial-gradient(ellipse 90% 55% at 50% -10%, rgb(239 226 201 / 0.85), transparent 70%),
+          radial-gradient(ellipse 70% 50% at 50% 110%, rgb(239 226 201 / 0.7), transparent 60%);
       }
-      #boot .line { display: flex; gap: .75em; opacity: .9; }
-      #boot .dim { color: var(--ink-2); }
-      #boot .cur { display: inline-block; width: .6em; height: 1.1em; background: var(--ink); vertical-align: -.15em; animation: blink 1s steps(1) infinite; }
-      #boot .bar { margin-top: 1.5rem; width: 12rem; height: 2px; background: var(--line); position: relative; overflow: hidden; }
-      #boot .bar::after { content: ""; position: absolute; inset: 0; width: 35%; background: var(--accent); animation: sweep 1.6s linear infinite; }
+      #boot .mark { width: 28px; height: 28px; margin-bottom: 1.25rem; color: var(--accent); }
+      #boot .line {
+        font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent);
+      }
+      #boot .sub { margin-top: .85rem; font-size: 15px; color: var(--ink-2); letter-spacing: .02em; }
+      #boot .cur {
+        display: inline-block; width: .45em; height: .9em; background: var(--accent);
+        vertical-align: -.1em; margin-left: .15em; animation: blink 1.1s steps(1) infinite;
+      }
+      #boot .bar {
+        margin-top: 1.75rem; width: 10rem; height: 1px; background: var(--line);
+        position: relative; overflow: hidden;
+      }
+      #boot .bar::after {
+        content: ""; position: absolute; inset: 0; width: 40%; background: var(--accent);
+        animation: sweep 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+      }
       @keyframes blink { 50% { opacity: 0; } }
-      @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+      @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(280%); } }
       @media (prefers-reduced-motion: reduce) { #boot .cur, #boot .bar::after { animation: none; } }
     </style>
   </head>
   <body>
     <div id="boot" aria-live="polite" aria-label="Loading">
-      <div class="line"><span class="dim">SYSTEM://</span><span>WEDDING_NOTIFICATION</span></div>
-      <div class="line" style="margin-top:.5em"><span class="dim">&gt;</span><span>BOOT<span class="cur"></span></span></div>
+      <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 20c0-8 4-12 12-12" />
+        <path d="M12 8c2.5-3 5-4 8-4" />
+        <path d="M11.5 8.5c1.2.8 1.8 2.2 1.5 3.5" />
+        <circle cx="12.8" cy="13.2" r="0.8" fill="currentColor" stroke="none" />
+      </svg>
+      <div class="line">ДАЪВАТНОМА · ПРИГЛАШЕНИЕ<span class="cur"></span></div>
+      <div class="sub">Хисрав &amp; Фариштабону</div>
       <div class="bar"></div>
     </div>
 
     <div id="app"></div>
 
     <noscript>
-      <!-- Pure-HTML fallback: the invitation still reads when JS is blocked or never arrives. -->
       <style>#boot{display:none}</style>
-      <main style="max-width:36rem;margin:0 auto;padding:3rem 1.25rem;font-family:ui-sans-serif,system-ui,sans-serif;line-height:1.6">
-        <p style="font-size:11px;letter-spacing:.14em;color:#6f665a">SYSTEM://WEDDING_NOTIFICATION</p>
-        <h1 style="font-weight:500;letter-spacing:.06em;font-size:1.6rem;margin:.5rem 0 1.5rem">Худоёров Хисрав &amp; Раҷабова Фариштабону</h1>
-        <p>Шумо даъват шудаед. · Вы приглашены.</p>
-        <p style="border:1px solid #b9ae98;padding:1rem;margin-top:1.5rem">
-          Падари домод / Отец жениха — Фирдавс: <a href="tel:+992555555977">+992 55 555 59 77</a><br />
-          Падари арӯс / Отец невесты — Алишер: <a href="tel:+992123123123">+992 12 312 31 23</a>
+      <main style="max-width:36rem;margin:0 auto;padding:3rem 1.25rem;font-family:Georgia,serif;line-height:1.7;background:#f7f1e6;color:#2e2620">
+        <p style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#b8863b">ДАЪВАТНОМА · ПРИГЛАШЕНИЕ</p>
+        <h1 style="font-weight:500;font-size:1.85rem;margin:.75rem 0 1.25rem">Худоёров Хисрав &amp; Раҷабова Фариштабону</h1>
+        <p style="color:#7a6a55">Шумо даъват шудаед. · Вы приглашены.</p>
+        <p style="border:1px solid #b8863b;padding:1.1rem;margin-top:1.75rem;background:#fffdf7">
+          Падари домод / Отец жениха — Фирдавс: <a href="tel:+992555555977" style="color:#2e2620">+992 55 555 59 77</a><br />
+          Падари арӯс / Отец невесты — Алишер: <a href="tel:+992123123123" style="color:#2e2620">+992 12 312 31 23</a>
         </p>
       </main>
     </noscript>

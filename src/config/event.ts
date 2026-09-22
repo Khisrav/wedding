@@ -24,9 +24,6 @@ export const EVENT = {
     { id: 'groom-father', name: { ru: 'Фирдавс', tj: 'Фирдавс' }, roleKey: 'groomFather', phone: '+992 55 555 59 77' },
     { id: 'bride-father', name: { ru: 'Алишер', tj: 'Алишер' }, roleKey: 'brideFather', phone: '+992 12 312 31 23' },
   ],
-
-  /** Shown next to the date like a build hash */
-  build: 'v1.0.0 // rev.2b26',
 } as const
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`

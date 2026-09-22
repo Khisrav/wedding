@@ -1,91 +1,106 @@
 ---
-name: nier-automata-ui-ux
-description: Design guidance for building interfaces in the spirit of NieR:Automata's UI — warm monochrome/beige palette, thin geometric linework, terminal/OS-like chrome, and restrained glitch motion. Use when a user asks for a "NieR-style," "android OS," "sci-fi terminal," or "minimal beige HUD" look for a web app, dashboard, or game UI mockup.
+name: nothing-os-5-ui-ux
+description: Design guidance for building interfaces in the spirit of Nothing OS 5.0 — transparent monochrome base, Geist system type, dot-matrix used only as accent, adaptive/minimal widgets — with the signature red accent swapped for GOLD. Use for clean, modern, minimal invitation or product UI.
 ---
 
-# NieR:Automata-Inspired UI/UX
+# Nothing OS 5.0-Inspired UI/UX (Gold Accent)
 
-This is a design language reference, not a reproduction of any copyrighted assets. Nothing here should include NieR:Automata logos, character art, in-game text, or fonts under license — the goal is to capture the *design principles* PlatinumGames' UI artist Hisayoshi Kijima described (sci-fi restraint growing out of a fantasy/scrapbook lineage, functional clarity, a "luxurious but worn" feel) and translate them into an original interface.
+This is a design-language reference, not a reproduction of any copyrighted assets — no Nothing logos, wordmarks, or the licensed NDot/Ntype fonts themselves. The goal is to translate Nothing's OS 5.0 design language (a pure monochrome canvas, transparent/see-through materials, the Geist system typeface carrying most of the UI with dot-matrix now used sparingly as accent rather than everywhere, and an adaptive single accent color) into an original build — with that accent recolored from Nothing's signature red to **gold**.
 
 ## Core design principles
 
-1. **Warm neutral over cold neutral.** The signature move is a beige/cream base instead of the usual black or pure white "sci-fi HUD" cliché. It reads as machine-made but not sterile — like aged paper or bone rather than glass.
-2. **Function first, ornament second.** Every line, bracket, and divider should look like it's doing structural work (framing a data field, marking a boundary) rather than being decorative chrome.
-3. **Thin, precise linework.** Hairline strokes (1px), sharp corners, occasional single chamfered/cut corner — never soft shadows or heavy borders.
-4. **Restraint in motion.** Panels slide/wipe in with short, linear (not bouncy) easing. Occasional deliberate "glitch" — a brief scanline flicker or text jitter — used sparingly as a moment of emphasis, not constant background noise.
-5. **Modular, slotted layout.** Think of a chip/inventory grid or a musical staff: content sits in discrete cells with visible grid lines, echoing the game's chip-installation system and its notation-inspired menu bars.
+1. **Monochrome canvas, one accent color.** Nothing OS 5.0's whole system is black/white/gray with a single accent doing all the "this matters" work. Here that accent is gold — used for exactly one job (primary actions, active states, key highlights), never as a general decoration.
+2. **Type carries the hierarchy, not color.** OS 5.0 moved its everyday UI onto Geist (a clean, slightly technical grotesk) and pulled the dot-matrix font back to a few accent spots — dates, counters, small labels — instead of using it everywhere like earlier versions did. Follow the same restraint: one clean sans for almost all text, dot-matrix only where it earns its keep.
+3. **Transparent, layered materials.** Panels read as slightly see-through glass over the canvas rather than solid opaque cards — subtle blur/backdrop-filter, thin 1px borders, no heavy drop shadows.
+4. **Grid discipline.** Widgets and content blocks sit on a visible, consistent grid with generous, even spacing — nothing crowded, nothing centered "by eye."
+5. **Quiet, mechanical motion.** Short, linear or slight-ease transitions (toggle switches, panel reveals) that feel precise rather than bouncy or playful.
 
 ## Color tokens
 
 ```css
 :root {
-  --bg-primary:    #ece6d8;  /* warm beige base */
-  --bg-panel:      #f5f1e6;  /* slightly lighter panel fill */
-  --bg-recessed:   #ddd5c2;  /* inset / disabled fields */
-  --ink-primary:   #2b2620;  /* near-black warm ink for text */
-  --ink-secondary: #6f665a;  /* muted labels, captions */
-  --line-hairline: #b9ae98;  /* dividers, grid lines */
-  --accent-active: #c96f3e;  /* burnt amber — selection, active state */
-  --accent-alert:  #b23b3b;  /* warning/damage/error */
-  --accent-system: #4c6b63;  /* muted teal-green — system/ok state */
+  --bg-canvas:     #fafafa;  /* near-white base */
+  --bg-panel:      rgba(255, 255, 255, 0.6); /* translucent panel over canvas */
+  --bg-panel-solid:#ffffff;  /* fallback where backdrop-filter isn't supported */
+  --ink-primary:   #141414;  /* near-black text */
+  --ink-secondary: #6b6b6b;  /* muted labels, secondary text */
+  --line-hairline: #e2e2e2;  /* thin dividers/borders */
+  --accent-gold:   #c9a24b;  /* primary accent — replaces Nothing Red */
+  --accent-gold-soft: #e6d3a3; /* lighter gold for subtle fills/hover */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-primary:    #1c1a16;
-    --bg-panel:      #262319;
-    --bg-recessed:   #14120e;
-    --ink-primary:   #eee7d6;
-    --ink-secondary: #b3a993;
-    --line-hairline: #45402f;
+    --bg-canvas:     #141414;
+    --bg-panel:      rgba(20, 20, 20, 0.6);
+    --bg-panel-solid:#1c1c1c;
+    --ink-primary:   #f5f5f5;
+    --ink-secondary: #9a9a9a;
+    --line-hairline: #2c2c2c;
   }
 }
 ```
 
 ## Typography
 
-- A monospaced or semi-condensed geometric sans for data/labels (tracked out, uppercase, small size — e.g. system-ui or a mono stack) paired with a plain humanist serif or sans for longer readable text — mirrors the game's mix of technical readouts and warm, book-like body text.
-- Letter-spacing on labels: `0.08em`–`0.15em`.
-- Avoid rounded/soft display faces entirely — no geometric-sans-with-rounded-terminals fonts.
+- Primary UI font: a clean, slightly technical grotesk in the spirit of Geist — e.g. Geist, Inter, or Space Grotesk for nearly all text (headings, body, buttons, nav).
+- Dot-matrix font: reserved for a handful of accent spots only — a countdown/date display, a small numeric badge, a section eyebrow — never for paragraph text or navigation.
 
 ```css
-.label   { font: 500 11px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-secondary); }
-.body    { font: 400 15px/1.6 "IBM Plex Serif", Georgia, serif; color: var(--ink-primary); }
-.numeral { font: 600 20px/1 "IBM Plex Mono", monospace; }
+.heading  { font: 600 clamp(24px, 4vw, 40px)/1.2 "Geist", "Inter", sans-serif; color: var(--ink-primary); letter-spacing: -0.01em; }
+.body     { font: 400 16px/1.6 "Geist", "Inter", sans-serif; color: var(--ink-primary); }
+.label    { font: 500 12px/1.4 "Geist", "Inter", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-secondary); }
+.dotmatrix-accent { font-family: "Dot Matrix", monospace; letter-spacing: .1em; color: var(--accent-gold); }
 ```
 
-## Layout & chrome patterns
+## Layout & component patterns
 
-- **Cut-corner panels**: one or two corners of a panel are chamfered at 45°, done with `clip-path: polygon(...)` — a quiet signature shape, not applied to every element.
-- **Hairline grid dividers** instead of card shadows: `border: 1px solid var(--line-hairline)`, no `box-shadow` unless it's a 1px inset for a pressed state.
-- **Sidebar/tab rail**: a slim vertical strip of icon-only tabs with a thin active-indicator bar (2px) in `--accent-active`, not a filled background.
-- **Data readouts**: label above value, label muted+tracked, value large and monospaced, e.g. `HEALTH` / `0980 / 1000`.
-- **Status chips**: small rectangular (not pill-shaped) tags with a hairline border and a 6px square "LED" indicator dot in the relevant accent color.
-- **Progress/gauge bars**: rectangular, segmented into discrete ticks rather than one smooth fill — echoes the chip-slot/segmented aesthetic.
+- **Widget cards**: rounded corners (16–20px radius), translucent fill (`var(--bg-panel)` + `backdrop-filter: blur(20px)`), 1px `var(--line-hairline)` border, no colored fill except the rare gold-accented widget.
+- **Toggle/switch controls**: pill-shaped, gray track, gold knob/fill only in the "on" state — exactly the one-accent-color rule applied to a control.
+- **Status/eyebrow labels**: small dot-matrix or tracked-uppercase text in gold, sitting above a heading — this is the "accent used sparingly" pattern from OS 5.0's redesign.
+- **Dividers**: hairline 1px lines, full-bleed or inset — never gradient or decorative.
+- **Buttons**: primary = solid gold fill with `--ink-primary`-on-gold text or dark text; secondary = transparent with hairline border, no fill.
+
+```css
+.card {
+  background: var(--bg-panel);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--line-hairline);
+  border-radius: 18px;
+}
+.btn-primary {
+  background: var(--accent-gold);
+  color: #141414;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font: 500 14px/1 "Geist", sans-serif;
+}
+```
 
 ## Motion
 
-- Panel enter: 120–180ms linear or ease-out slide (8–16px) + opacity fade. No spring/bounce.
-- Selection change: instant snap of the active-indicator bar, not an eased glide, to feel mechanical.
-- Glitch accent (use rarely, e.g. on error/transition states): 80–150ms of a horizontal scanline offset or 1–2 characters of text substituting a glyph, then settle. Implement as a short CSS `@keyframes` clip-path jitter — never anything flashing fast enough to be a photosensitivity risk.
+- Panel/section reveals: 200–260ms ease-out fade + 8px upward translate — clean, not playful.
+- Toggle/switch state change: 150ms linear slide of the knob, instant color fill.
+- Avoid bounce, elastic, or overshoot easing entirely — OS 5.0's motion reads as precise/mechanical, not springy.
 
 ```css
-@keyframes glitch-in {
-  0%   { clip-path: inset(0 0 100% 0); opacity: 0; }
-  60%  { clip-path: inset(0 0 0 0);   opacity: 1; }
-  100% { clip-path: inset(0 0 0 0);   opacity: 1; }
+.reveal {
+  animation: reveal 220ms ease-out both;
 }
-.panel-enter { animation: glitch-in 160ms linear; }
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 ```
 
 ## Iconography
 
-- Line icons only, 1.5px stroke, no fills, sharp joins (not rounded caps) — geometric and technical rather than friendly.
-- Prefer bracket/reticle motifs (`⌐ ¬`-style corner marks) to frame focused elements instead of a glow or highlight box.
+- Thin-stroke (1.5px), geometric, monoline icons — no fills, no gradients — matching the system's clean grotesk character.
+- Keep icons monochrome (`--ink-primary` or `--ink-secondary`); reserve gold for the rare "active/selected" icon state only.
 
-## When applying this to a real interface
+## Applying this to the wedding site
 
-- Keep it to **one** accent color doing the "active/selected" work; reserve the others strictly for status semantics (ok/warn/error).
-- Don't overuse the chamfered corner — one per panel/section, not on every button.
-- Keep body copy in the readable serif/sans; confine the mono/tracked treatment to labels, numbers, and system text so long-form content stays legible.
-- This pairs well with the `frontend-design` skill's guidance on intentional, non-templated visual choices — load that alongside this one when actually building the UI.
+- Use the translucent card pattern for the date/venue/contact block, with gold reserved for the one primary action (e.g. "Save the date" / RSVP button) and maybe a dot-matrix countdown to the wedding date as the one accent-typography moment.
+- Keep body copy (venue address, phone numbers) in the plain grotesk at full contrast — legibility over style, especially given guests will load this over slow connections.
+- This replaces the previously-planned Clair Obscur / NieR Automata directions for the same project — keep only one visual language active when building, since mixing this clean monochrome-grid system with either of the ornate ones will read as inconsistent.
+- Pairs well with the `frontend-design` skill for general layout/spacing discipline; load that alongside this one when actually building the pages.

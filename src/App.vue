@@ -22,10 +22,9 @@ watch(booted, (on) => { if (on) void tryAutoplay() })
 </script>
 
 <template>
-  <div class="bg-hearts min-h-dvh text-ink">
+  <div class="bg-wash min-h-dvh text-ink">
     <BootScreen v-if="!booted" :ready="ready" :steps="steps" @done="booted = true" />
 
-    <!-- Fixed HUD controls -->
     <header class="fixed top-0 inset-x-0 z-40 flex items-start justify-end px-4 pt-4 sm:px-6 sm:pt-5 pointer-events-none">
       <div class="flex items-center gap-3 pointer-events-auto">
         <SoundToggle />

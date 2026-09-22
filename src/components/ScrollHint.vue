@@ -12,19 +12,19 @@ function go() {
 </script>
 
 <template>
-  <button type="button" class="group flex flex-col items-center gap-2 sys text-ink-2 hover:text-ink transition-colors" @click="go">
+  <button type="button" class="group flex flex-col items-center gap-2 sys text-ink-2 hover:text-accent transition-colors" @click="go">
     <span>{{ t.scroll }}</span>
     <span class="relative block w-px h-8 bg-line overflow-hidden" aria-hidden="true">
-      <span class="scroll-dot absolute left-0 top-0 w-px h-3 bg-ink" />
+      <span class="scroll-dot absolute left-0 top-0 w-px h-3 bg-accent" />
     </span>
-    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+    <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" aria-hidden="true">
       <path d="M1 1l6 6 6-6" />
     </svg>
   </button>
 </template>
 
 <style scoped>
-.scroll-dot { animation: drop 1.6s cubic-bezier(0.2, 0, 0, 1) infinite; }
+.scroll-dot { animation: drop 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite; }
 @keyframes drop {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(300%); }

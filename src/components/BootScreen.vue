@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import FlourishIcon from './icons/FlourishIcon.vue'
+import BotanicalDivider from './BotanicalDivider.vue'
 import type { BootStep } from '../composables/useAssetsReady'
 import { useI18n } from '../i18n'
 import { useReducedMotion } from '../composables/useReducedMotion'
@@ -10,27 +12,30 @@ const emit = defineEmits<{ done: [] }>()
 const { t } = useI18n()
 const reduced = useReducedMotion()
 
-/* Terminal-style typewriter for the header line: plain setInterval, no GSAP
-   dependency (GSAP may still be downloading while this is on screen). */
-const header = 'SYSTEM://WEDDING_NOTIFICATION'
-const typed = ref(reduced.value ? header : '')
+const header = computed(() => t.value.sysHeader)
+const typed = ref(reduced.value ? header.value : '')
 let timer: number | undefined
 
 const leaving = ref(false)
 const progress = computed(() => props.steps.filter((s) => s.done).length / props.steps.length)
 
 onMounted(() => {
-  // Take over from the static #boot painted by index.html (same look, no flash)
   document.getElementById('boot')?.remove()
 
   if (!reduced.value) {
     let i = 0
-    timer = window.setInterval(() => {
+    const run = () => {
+      const text = header.value
       i++
-      typed.value = header.slice(0, i)
-      if (i >= header.length) window.clearInterval(timer)
-    }, 28)
+      typed.value = text.slice(0, i)
+      if (i >= text.length) window.clearInterval(timer)
+    }
+    timer = window.setInterval(run, 36)
   }
+})
+
+watch(header, (text) => {
+  if (props.ready || reduced.value) typed.value = text
 })
 
 watch(
@@ -38,12 +43,11 @@ watch(
   (ok) => {
     if (!ok) return
     window.clearInterval(timer)
-    typed.value = header
-    // Show READY for a beat, then wipe out
+    typed.value = header.value
     window.setTimeout(() => {
       leaving.value = true
-      window.setTimeout(() => emit('done'), reduced.value ? 0 : 520)
-    }, 350)
+      window.setTimeout(() => emit('done'), reduced.value ? 0 : 700)
+    }, 420)
   },
   { immediate: true },
 )
@@ -53,70 +57,56 @@ onBeforeUnmount(() => window.clearInterval(timer))
 
 <template>
   <div
-    class="boot fixed inset-0 z-[100] bg-paper text-ink flex flex-col items-center justify-center px-6 font-mono select-none"
+    class="boot fixed inset-0 z-[100] bg-wash text-ink flex flex-col items-center justify-center px-6 select-none"
     :class="{ 'is-leaving': leaving }"
     role="status"
     aria-live="polite"
   >
-    <div class="w-full max-w-sm">
-      <div class="sys text-ink">
-        <span class="text-ink-3">{{ typed.slice(0, 9) }}</span>{{ typed.slice(9) }}<span v-if="!ready" class="cursor-blink inline-block w-[.6em] h-[1.1em] bg-ink align-[-0.15em] ml-1" />
-      </div>
+    <div class="w-full max-w-sm text-center">
+      <FlourishIcon class="mx-auto w-7 h-7 text-accent mb-6" />
 
-      <ol class="mt-6 space-y-1.5 sys">
-        <li v-for="s in steps" :key="s.id" class="flex items-baseline gap-3">
-          <span class="text-ink-3">&gt;</span>
-          <span class="flex-1 tracking-wide2">{{ s.label }}</span>
-          <span class="tabular-nums" :class="s.done ? 'text-accent' : 'text-ink-3'">
-            {{ s.done ? '[ OK ]' : '[ .. ]' }}
+      <p class="sys text-accent tracking-wide2 min-h-[1.4em]">
+        {{ typed }}<span
+          v-if="!ready"
+          class="cursor-blink inline-block w-[.45em] h-[.85em] bg-accent align-[-0.08em] ml-1"
+          aria-hidden="true"
+        />
+      </p>
+
+      <BotanicalDivider class="mt-5 mb-6" />
+
+      <ol class="space-y-2 font-body text-sm text-ink-2">
+        <li v-for="s in steps" :key="s.id" class="flex items-baseline justify-between gap-4">
+          <span class="tracking-wide2 uppercase text-[0.7rem]">{{ s.label }}</span>
+          <span class="tabular-nums text-[0.7rem] tracking-sys" :class="s.done ? 'text-accent' : 'text-ink-3'">
+            {{ s.done ? '✦' : '·' }}
           </span>
-        </li>
-        <li class="flex items-baseline gap-3 pt-2 text-ink-2">
-          <span class="text-ink-3">&gt;</span>
-          <span class="flex-1">{{ ready ? t.bootReady : t.bootLine1 }}</span>
         </li>
       </ol>
 
-      <!-- Segmented progress gauge: discrete ticks, not a smooth fill -->
-      <div class="mt-6 grid grid-cols-12 gap-[3px]" aria-hidden="true">
-        <span
-          v-for="i in 12"
-          :key="i"
-          class="h-[3px] transition-colors duration-150"
-          :class="i / 12 <= progress + 0.001 ? 'bg-accent' : 'bg-line'"
+      <p class="mt-5 font-body text-ink-2 text-sm">
+        {{ ready ? t.bootReady : t.bootLine1 }}
+      </p>
+
+      <!-- Soft gold progress line -->
+      <div class="mt-6 h-px bg-line/70 overflow-hidden" aria-hidden="true">
+        <div
+          class="h-full bg-accent origin-left transition-[transform] duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)]"
+          :style="{ transform: `scaleX(${Math.max(0.06, progress)})` }"
         />
       </div>
-
-      <div class="mt-3 flex justify-between sys text-ink-3">
-        <span>{{ Math.round(progress * 100).toString().padStart(3, '0') }}%</span>
-        <span>v1.0.0</span>
-      </div>
     </div>
-
-    <!-- Corner brackets -->
-    <span class="corner tl" /><span class="corner tr" /><span class="corner bl" /><span class="corner br" />
   </div>
 </template>
 
 <style scoped>
 .boot {
-  transition: clip-path 520ms cubic-bezier(0.7, 0, 0.3, 1), opacity 400ms linear 120ms;
-  clip-path: inset(0 0 0 0);
+  transition: opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .boot.is-leaving {
-  clip-path: inset(0 0 100% 0);
   opacity: 0;
+  transform: translateY(-8px);
 }
-.corner {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--color-ink-2);
-}
-.corner.tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
-.corner.tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
-.corner.bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
-.corner.br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
 @media (prefers-reduced-motion: reduce) {
   .boot { transition: none; }
 }
