@@ -109,7 +109,7 @@ onUnmounted(() => tl?.kill())
 
     <FallingLeaves :active="start" />
 
-    <div ref="hintRef" class="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 md:bottom-12">
+    <div ref="hintRef" class="absolute bottom-24 left-1/2 z-30 -translate-x-1/2 md:bottom-32">
       <ScrollHint :label="t.hero.scrollHint" />
     </div>
   </section>

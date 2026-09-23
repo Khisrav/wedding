@@ -75,7 +75,7 @@ const tj: Dictionary = {
   hero: {
     eyebrow: 'Даъватнома',
     invite: 'Шуморо даъват мекунем, ки ин рӯзи хосро бо мо тақсим кунед',
-    scrollHint: 'Ба поён ҳаракат кунед',
+    scrollHint: 'Ба поён',
   },
   info: {
     dateLabel: 'Сана',
@@ -106,14 +106,42 @@ const tj: Dictionary = {
 const dictionaries: Record<Lang, Dictionary> = { ru, tj }
 
 const STORAGE_KEY = 'wedding-lang'
+const LANG_PARAM = 'l'
+
+function parseLang(value: string | null): Lang | null {
+  const code = value?.toLowerCase()
+  if (code === 'ru' || code === 'tj') return code
+  return null
+}
+
+function langFromUrl(): Lang | null {
+  if (typeof window === 'undefined') return null
+  return parseLang(new URLSearchParams(window.location.search).get(LANG_PARAM))
+}
+
+function applyLangToUrl(next: Lang) {
+  const url = new URL(window.location.href)
+  if (url.searchParams.get(LANG_PARAM) === next) return
+  url.searchParams.set(LANG_PARAM, next)
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`
+  window.history.replaceState(window.history.state, '', nextUrl)
+}
 
 function getInitialLang(): Lang {
-  if (typeof window === 'undefined') return 'ru'
-  const stored = window.localStorage.getItem(STORAGE_KEY)
-  return stored === 'tj' ? 'tj' : 'ru'
+  const fromUrl = langFromUrl()
+  if (fromUrl) return fromUrl
+  if (typeof window === 'undefined') return 'tj'
+  const stored = parseLang(window.localStorage.getItem(STORAGE_KEY))
+  return stored ?? 'tj'
 }
 
 const lang = ref<Lang>(getInitialLang())
+
+if (typeof window !== 'undefined') {
+  window.localStorage.setItem(STORAGE_KEY, lang.value)
+  document.documentElement.lang = dictionaries[lang.value].meta.htmlLang
+  applyLangToUrl(lang.value)
+}
 
 export function useI18n() {
   const t = computed<Dictionary>(() => dictionaries[lang.value])
@@ -123,6 +151,7 @@ export function useI18n() {
     if (typeof window !== 'undefined') {
       window.localStorage.setItem(STORAGE_KEY, next)
       document.documentElement.lang = dictionaries[next].meta.htmlLang
+      applyLangToUrl(next)
     }
   }
 

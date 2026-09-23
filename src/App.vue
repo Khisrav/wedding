@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import BootScreen from './components/BootScreen.vue'
+import CornerOrnaments from './components/CornerOrnaments.vue'
 import HeartField from './components/HeartField.vue'
 import HeroSection from './components/HeroSection.vue'
 import InfoSection from './components/InfoSection.vue'
@@ -53,6 +54,7 @@ function goToSection(index: number) {
   </Transition>
 
   <HeartField />
+  <CornerOrnaments />
   <LangSwitch :lang="lang" :label="t.langSwitch.label" @set="setLang" />
   <ScreenDots :active="activeIndex" :count="2" @select="goToSection" />
 

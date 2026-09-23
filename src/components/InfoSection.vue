@@ -3,7 +3,6 @@ import PinIcon from './icons/PinIcon.vue'
 import CalendarIcon from './icons/CalendarIcon.vue'
 import ContactCard from './ContactCard.vue'
 import Countdown from './Countdown.vue'
-import ShareButton from './ShareButton.vue'
 import { useI18n } from '../i18n'
 import {
   brideName,
