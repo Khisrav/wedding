@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
-import PetalCanvas from './PetalCanvas.vue'
+import FallingLeaves from './FallingLeaves.vue'
 import BotanicalDivider from './BotanicalDivider.vue'
 import GrowingFlower from './GrowingFlower.vue'
 import ScrollHint from './ScrollHint.vue'
@@ -61,9 +61,7 @@ onUnmounted(() => tl?.kill())
     ref="heroRoot"
     class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-6 py-24 md:h-screen md:snap-start"
   >
-    <PetalCanvas />
-
-    <div class="relative z-10 flex max-w-sm flex-col items-center text-center">
+    <div class="hero-copy relative z-10 flex max-w-sm flex-col items-center text-center">
       <p
         ref="eyebrowRef"
         class="mb-6 text-[11px] font-medium uppercase tracking-[0.35em] text-burgundy/70"
@@ -109,7 +107,9 @@ onUnmounted(() => tl?.kill())
       </p>
     </div>
 
-    <div ref="hintRef" class="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 md:bottom-12">
+    <FallingLeaves :active="start" />
+
+    <div ref="hintRef" class="absolute bottom-10 left-1/2 z-30 -translate-x-1/2 md:bottom-12">
       <ScrollHint :label="t.hero.scrollHint" />
     </div>
   </section>
