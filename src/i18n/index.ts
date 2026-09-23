@@ -130,9 +130,9 @@ function applyLangToUrl(next: Lang) {
 function getInitialLang(): Lang {
   const fromUrl = langFromUrl()
   if (fromUrl) return fromUrl
-  if (typeof window === 'undefined') return 'tj'
+  if (typeof window === 'undefined') return 'ru'
   const stored = parseLang(window.localStorage.getItem(STORAGE_KEY))
-  return stored ?? 'tj'
+  return stored ?? 'ru'
 }
 
 const lang = ref<Lang>(getInitialLang())
